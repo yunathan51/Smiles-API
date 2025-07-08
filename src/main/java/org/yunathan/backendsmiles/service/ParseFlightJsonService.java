@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
-import org.yunathan.backendsmiles.model.FlightModel;
+import org.yunathan.backendsmiles.dto.FlightDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,12 +14,12 @@ import java.util.List;
 @Service
 public class ParseFlightJsonService {
 
-    public static List<FlightModel> parseJsonResponse (String responseBody) {
-        JsonObject json = new Gson().fromJson(responseBody, JsonObject.class);    // Parse the JSON response
+    public static List<FlightDto> parseJsonResponse (String responseBody) {
+        JsonObject json = new Gson().fromJson(responseBody, JsonObject.class);
         JsonArray flightSegmentList = json.getAsJsonArray("requestedFlightSegmentList");
 
 
-        List<FlightModel> flights = new ArrayList<>();
+        List<FlightDto> flights = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
         for (JsonElement segmentElement : flightSegmentList) {
@@ -30,7 +30,7 @@ public class ParseFlightJsonService {
                 JsonObject flight = flightElement.getAsJsonObject();
                 JsonObject departure = flight.getAsJsonObject("departure");
                 JsonObject arrival = flight.getAsJsonObject("arrival");
-                JsonArray fareList = flight.getAsJsonArray("fareList"); // Numerous types of fares for the same flight, we want the second one
+                JsonArray fareList = flight.getAsJsonArray("fareList"); // Numerous types of fares for the same flight, we want the second one in this case
                 JsonObject passengers = json.getAsJsonObject("passenger");
 
                 String departureAirport = departure.getAsJsonObject("airport").get("code").getAsString();
@@ -43,20 +43,19 @@ public class ParseFlightJsonService {
                     Double miles = secondFare.get("miles").getAsDouble();
                     Double costTax = secondFare.getAsJsonObject("g3").get("costTax").getAsDouble();
 
-                    FlightModel flightModel = new FlightModel();
+                    FlightDto flightModel = new FlightDto();
                     flightModel.setDepartureAirport(departureAirport);
                     flightModel.setArrivalAirport(arrivalAirport);
                     flightModel.setDepartureTime(departureTime);
                     flightModel.setArrivalTime(arrivalTime);
                     flightModel.setPassengers(passengerCount);
                     flightModel.setMiles(miles);
-                    flightModel.setCostTax(costTax);
-
+                    flightModel.setCostTaxInBRL(costTax);
                     flights.add(flightModel);
                 }
             }
         }
 
-        return flights;    // Return a list of FlightModel objects
+        return flights;
     }
 }

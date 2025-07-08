@@ -1,6 +1,6 @@
 package org.yunathan.backendsmiles.service;
 
-import org.yunathan.backendsmiles.model.FlightModel;
+import org.yunathan.backendsmiles.dto.FlightDto;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,10 +15,10 @@ import java.util.zip.GZIPInputStream;
 @Service
 public class FlightService {
 
-    private static final String API_URL_TEMPLATE = "https://api-air-flightsearch-green.smiles.com.br/v1/airlines/search?cabin=ALL&originAirportCode=%s&destinationAirportCode=%s&departureDate=%s&adults=%d";
+    private static final String API_URL_TEMPLATE = "https://api-air-flightsearch-green.smiles.com.br/v1/airlines/search?cabin=ALL&originAirportCode=%s&destinationAirportCode=%s&departureDate=%s&memberNumber=&adults=%d";
     private static final OkHttpClient client = new OkHttpClient();
 
-    public List<FlightModel> searchFlights(String departureAirport, String arrivalAirport, String departureTime, Integer passengers) {
+    public List<FlightDto> searchFlights(String departureAirport, String arrivalAirport, String departureTime, Integer passengers) {
         String url = String.format(API_URL_TEMPLATE, departureAirport, arrivalAirport, departureTime, passengers);
 
         Request request = new Request.Builder()
@@ -37,7 +37,6 @@ public class FlightService {
             if (response.isSuccessful() && response.body() != null) {
                 String responseBody;
                 if ("gzip".equalsIgnoreCase(response.header("Content-Encoding"))) {
-                    // Decompress the content
                     try (GZIPInputStream gzip = new GZIPInputStream(response.body().byteStream());
                          BufferedReader br = new BufferedReader(new InputStreamReader(gzip))) {
                         StringBuilder sb = new StringBuilder();
@@ -51,10 +50,8 @@ public class FlightService {
                     responseBody = response.body().string();
                 }
 
-                // Print the JSON response
                 System.out.println("JSON Response: " + responseBody);
 
-                // Process the JSON response
                 return ParseFlightJsonService.parseJsonResponse(responseBody);
             }
         } catch (Exception e) {

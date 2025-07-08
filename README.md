@@ -1,20 +1,15 @@
-# Backend Smiles Application
+# Smiles API
 
-This project is a backend application built with Spring Boot to search for flights based on specific criteria such as departure airport, arrival airport, departure time, and the number of passengers.
+> ⚠️ **Notice:** The API now returns **HTTP 406 Not Acceptable**, meaning this application no longer works. (07/2025)
 
-## Technologies Used
-
-- Java
-- Spring Boot
-- Spring MVC
+This application is built with Spring Boot to search for flights based on specific criteria such as departure airport, arrival airport, departure date, and the number of passengers.
 
 ## Project Structure
 
 - **`BackendSmilesApplication`**: Main class to start the application.
-- **`FlightModel`**: Model representing flight information.
+- **`FlightDTO`**: DTO representing flight information.
 - **`FlightController`**: Controller handling HTTP requests for flight searches.
-- **`FlightService`**: Service layer responsible for handling the business logic of searching for flights based on the provided criteria.
-- **`CorsConfiguration`**: Configuration to allow CORS in the application.
+- **`FlightService`**: Service layer responsible for searching for flights based on the provided criteria.
 
 ## Endpoints
 
@@ -22,13 +17,13 @@ This project is a backend application built with Spring Boot to search for fligh
 Searches for flights based on the provided parameters.
 
 **Parameters:**
-- `departureAirport` (String): The departure airport.
-- `arrivalAirport` (String): The arrival airport.
-- `departureTime` (String): The departure time.
-- `passengers` (Integer): The number of passengers.
+- `departureAirport` (String): The departure airport (IATA acronym).
+- `arrivalAirport` (String): The arrival airport (IATA acronym).
+- `departureTime` (String): The departure date.
+- `passengers` (Integer): The number of passengers (number of adults only).
 
 **Response:**
-A list of `FlightModel` objects containing flight information.
+A list of `FlightDto` objects containing flight information.
 
 **Example Request:**
 GET /search?departureAirport=GRU&arrivalAirport=FLN&departureTime=2024-08-20&passengers=2
@@ -42,7 +37,7 @@ GET /search?departureAirport=GRU&arrivalAirport=FLN&departureTime=2024-08-20&pas
     "arrivalTime": "11:55",
     "passengers": 1,
     "miles": 107500.0,
-    "costTax": 31.44
+    "costTaxInBRL": 31.44 
 }
 ```
 ## This application only works for domestic flights within Brazil.

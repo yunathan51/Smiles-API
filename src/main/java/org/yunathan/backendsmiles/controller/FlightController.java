@@ -1,6 +1,6 @@
 package org.yunathan.backendsmiles.controller;
 
-import org.yunathan.backendsmiles.model.FlightModel;
+import org.yunathan.backendsmiles.dto.FlightDto;
 import org.yunathan.backendsmiles.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public class FlightController {
     private FlightService flightService;
 
     @GetMapping("/search")
-    public List<FlightModel> searchFlights(
+    public List<FlightDto> searchFlights(
             @RequestParam String departureAirport,
             @RequestParam String arrivalAirport,
             @RequestParam String departureTime,
@@ -27,8 +27,4 @@ public class FlightController {
         return flightService.searchFlights(departureAirport, arrivalAirport, departureTime, passengers);
     }
 
-    @GetMapping("/error")
-    public String error() {
-        return "An error occurred!";
-    }
 }   

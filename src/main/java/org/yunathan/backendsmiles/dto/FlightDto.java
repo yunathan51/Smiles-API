@@ -1,9 +1,9 @@
-package org.yunathan.backendsmiles.model;
+package org.yunathan.backendsmiles.dto;
 
 import lombok.Data;
 
 @Data
-public class FlightModel {
+public class FlightDto {
 
     private String departureAirport;
     private String arrivalAirport;
@@ -11,6 +11,6 @@ public class FlightModel {
     private String arrivalTime;
     private Integer passengers;
     private Double miles;
-    private Double costTax;
+    private Double costTaxInBRL;
 
 }
